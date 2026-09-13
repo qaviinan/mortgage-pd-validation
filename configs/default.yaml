@@ -1,0 +1,52 @@
+# Project 1 configuration. Every threshold here is quoted in the report BEFORE results.
+seed: 20260911
+
+data:
+  raw_dir: data/raw            # sample_YYYY.zip files from Freddie Mac Clarity go here
+  interim_dir: data/interim
+  processed_dir: data/processed
+  layout_xlsx: docs/reference/file_layout_july_2026.xlsx
+  performance_cutoff: 202603   # YYYYMM, from release notes (Release 47, July 2026)
+
+vintages:                      # by sample-file vintage = origination year (SPEC §4.4, revised 2026-09-12)
+  train: [2009, 2010, 2011, 2012, 2013, 2014, 2015]
+  tune: [2016]
+  oot: [2017, 2018]
+  stress: [2006, 2007, 2008]
+  covid_exhibit: [2019]
+
+target:
+  window_months: 36            # primary horizon
+  window_sensitivity: 24
+  dpd_threshold: 90            # 90+ days past due => delinquency status code >= 3
+  dpd_sensitivity: 60
+  exclude_forbearance_dpd: true   # primary: DPD months under Borrower Assistance Plan = F do not count
+  forbearance_lookback_months: 3  # ...nor DPD months within 3 months after a plan ends (deferral booking lag)
+  exclude_disaster_dpd: true      # same guard for months flagged "Delinquency Due to Disaster" (used for COVID hardship too)
+                                  # sensitivities: disaster false (forbearance-only); lookback 0; both false (pure ever-90+)
+  credit_event_zb_codes: [2, 3, 9]   # third-party sale, short sale/charge-off, REO disposition
+  payoff_zb_codes: [1]
+  censor_zb_codes: [15, 16]          # whole-loan sale, reperforming securitization
+  defect_zb_codes: [96]
+
+exclusions:
+  drop_harp: true              # HARP / Relief Refinance: distinct population, DTI undisclosed
+  amortization_types: [FRM]    # keep only fixed-rate (should be all of Standard dataset)
+
+features:
+  numeric: [fico, ltv, cltv, dti, orig_upb, orig_rate, orig_term, mi_pct, num_borrowers, num_units]
+  categorical: [loan_purpose, occupancy, property_type, channel, first_time_homebuyer, super_conforming]
+  excluded_by_design: [state, msa, zip3, seller_name, servicer_name, vintage]   # segmentation only
+  monotone: {fico: -1, ltv: 1, cltv: 1, dti: 1, orig_rate: 1}
+
+thresholds:                    # pre-registered; a breach becomes a finding
+  auc_oot_min: 0.70
+  auc_train_oot_gap_max: 0.03
+  segment_auc_min: 0.65
+  segment_min_defaults: 100
+  calib_in_large_rel_tol: 0.15
+  calib_slope_range: [0.8, 1.2]
+  psi_amber: 0.10
+  psi_red: 0.25
+  air_min: 0.80
+  bootstrap_reps: 1000

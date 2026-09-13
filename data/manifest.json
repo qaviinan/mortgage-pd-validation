@@ -1,0 +1,104 @@
+{
+  "source": "Freddie Mac Single-Family Loan-Level Dataset, Sample files (Clarity Data Intelligence)",
+  "generated_utc": "2026-09-12T06:26:28.467225+00:00",
+  "files": [
+    {
+      "vintage": 2006,
+      "file": "sample_2006.zip",
+      "bytes": 47846526,
+      "sha256": "e7543f57150e672e4f44be40c56ee0343e6721624ef733b4b46ee9a9aebc8413",
+      "mtime_utc": "2026-09-12T05:56:26.703393+00:00"
+    },
+    {
+      "vintage": 2007,
+      "file": "sample_2007.zip",
+      "bytes": 45748398,
+      "sha256": "07f5a9d5ef998ca68da3c801bf6c015d1aabfe10c4366102ff7041a0e8bf5697",
+      "mtime_utc": "2026-09-12T05:56:45.568527+00:00"
+    },
+    {
+      "vintage": 2008,
+      "file": "sample_2008.zip",
+      "bytes": 36859914,
+      "sha256": "eafe9ce5e8e0b7130a56b246e019fa880abb017001dabb67bdf9902f63fc2b49",
+      "mtime_utc": "2026-09-12T05:56:52.784013+00:00"
+    },
+    {
+      "vintage": 2009,
+      "file": "sample_2009.zip",
+      "bytes": 47217473,
+      "sha256": "aa6da842abdcd4e35d634ec764bf04bc059938bbcd80509aa52c49c36859a05e",
+      "mtime_utc": "2026-09-12T05:57:03.644035+00:00"
+    },
+    {
+      "vintage": 2010,
+      "file": "sample_2010.zip",
+      "bytes": 51983178,
+      "sha256": "d49982b5ee0f7b4a3fff8478d344beb098cc9855a85058a68122fd62fdf47a5c",
+      "mtime_utc": "2026-09-12T05:57:07.100360+00:00"
+    },
+    {
+      "vintage": 2011,
+      "file": "sample_2011.zip",
+      "bytes": 55567838,
+      "sha256": "8203f5f56fed7c9fdaa50cb34a6274317fbc6367d6fb7af041e900dfa23397b5",
+      "mtime_utc": "2026-09-12T05:57:27.833494+00:00"
+    },
+    {
+      "vintage": 2012,
+      "file": "sample_2012.zip",
+      "bytes": 70498252,
+      "sha256": "57b6b0281ee956dd1b8b4a7a24e4d3469fcbc8292fd7df981aa2a494f6a50220",
+      "mtime_utc": "2026-09-12T05:57:07.537092+00:00"
+    },
+    {
+      "vintage": 2013,
+      "file": "sample_2013.zip",
+      "bytes": 65941613,
+      "sha256": "bf80919fa702b413a485e237e87b3cd4ef822280e4bbae4851875d0d2ca33ffb",
+      "mtime_utc": "2026-09-12T05:57:26.110280+00:00"
+    },
+    {
+      "vintage": 2014,
+      "file": "sample_2014.zip",
+      "bytes": 53261503,
+      "sha256": "7bd66a474b4f4f15c5d8490c3bd850abe69e10d859d4024d8d7ec311a00c7bde",
+      "mtime_utc": "2026-09-12T05:57:53.167234+00:00"
+    },
+    {
+      "vintage": 2015,
+      "file": "sample_2015.zip",
+      "bytes": 55381655,
+      "sha256": "83cd76b9c705dd683d1490a37fb70f954c898a91a4279d09b06a7124f031c1e6",
+      "mtime_utc": "2026-09-12T05:57:47.653204+00:00"
+    },
+    {
+      "vintage": 2016,
+      "file": "sample_2016.zip",
+      "bytes": 54882222,
+      "sha256": "ecef66b69feb95aa10ee4bf8c9960bdde2711726632c309f60c0a71510af89f2",
+      "mtime_utc": "2026-09-12T05:57:54.341832+00:00"
+    },
+    {
+      "vintage": 2017,
+      "file": "sample_2017.zip",
+      "bytes": 45964286,
+      "sha256": "d0dbec440f556cbc92b0bd7fca4ce92d9dde37d568b1cfdffcae30888236f566",
+      "mtime_utc": "2026-09-12T05:57:38.389981+00:00"
+    },
+    {
+      "vintage": 2018,
+      "file": "sample_2018.zip",
+      "bytes": 33889319,
+      "sha256": "87e4d7ecad71ab0ad536d18fc078f51201077f602e35f49eccb7ea70cf01b2a8",
+      "mtime_utc": "2026-09-12T05:57:46.244712+00:00"
+    },
+    {
+      "vintage": 2019,
+      "file": "sample_2019.zip",
+      "bytes": 32350024,
+      "sha256": "5c145dda5ebb38ed25fe04fe1fe5a73588ca8b43970be71adc30096d8d5f8031",
+      "mtime_utc": "2026-09-12T05:57:51.864942+00:00"
+    }
+  ]
+}
