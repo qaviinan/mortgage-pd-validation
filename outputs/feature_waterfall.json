@@ -1,0 +1,128 @@
+[
+  {
+    "vintage": 2006,
+    "role": "stress",
+    "loans": 50000,
+    "observable": 49773,
+    "after_harp_exclusion": 49773,
+    "after_amortization_filter": 49773,
+    "defaults": 2417
+  },
+  {
+    "vintage": 2007,
+    "role": "stress",
+    "loans": 50000,
+    "observable": 49484,
+    "after_harp_exclusion": 49484,
+    "after_amortization_filter": 49484,
+    "defaults": 4205
+  },
+  {
+    "vintage": 2008,
+    "role": "stress",
+    "loans": 50000,
+    "observable": 49620,
+    "after_harp_exclusion": 49620,
+    "after_amortization_filter": 49620,
+    "defaults": 2553
+  },
+  {
+    "vintage": 2009,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49849,
+    "after_harp_exclusion": 44518,
+    "after_amortization_filter": 44518,
+    "defaults": 336
+  },
+  {
+    "vintage": 2010,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49911,
+    "after_harp_exclusion": 35315,
+    "after_amortization_filter": 35315,
+    "defaults": 197
+  },
+  {
+    "vintage": 2011,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49895,
+    "after_harp_exclusion": 34462,
+    "after_amortization_filter": 34462,
+    "defaults": 135
+  },
+  {
+    "vintage": 2012,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49892,
+    "after_harp_exclusion": 32526,
+    "after_amortization_filter": 32526,
+    "defaults": 74
+  },
+  {
+    "vintage": 2013,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49920,
+    "after_harp_exclusion": 35552,
+    "after_amortization_filter": 35552,
+    "defaults": 123
+  },
+  {
+    "vintage": 2014,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49905,
+    "after_harp_exclusion": 42623,
+    "after_amortization_filter": 42623,
+    "defaults": 243
+  },
+  {
+    "vintage": 2015,
+    "role": "train",
+    "loans": 50000,
+    "observable": 49965,
+    "after_harp_exclusion": 45952,
+    "after_amortization_filter": 45952,
+    "defaults": 251
+  },
+  {
+    "vintage": 2016,
+    "role": "tune",
+    "loans": 50000,
+    "observable": 49934,
+    "after_harp_exclusion": 47413,
+    "after_amortization_filter": 47413,
+    "defaults": 281
+  },
+  {
+    "vintage": 2017,
+    "role": "oot",
+    "loans": 50000,
+    "observable": 49879,
+    "after_harp_exclusion": 48077,
+    "after_amortization_filter": 48077,
+    "defaults": 419
+  },
+  {
+    "vintage": 2018,
+    "role": "oot",
+    "loans": 50000,
+    "observable": 49883,
+    "after_harp_exclusion": 49372,
+    "after_amortization_filter": 49372,
+    "defaults": 336
+  },
+  {
+    "vintage": 2019,
+    "role": "covid_exhibit",
+    "loans": 50000,
+    "observable": 49877,
+    "after_harp_exclusion": 49847,
+    "after_amortization_filter": 49847,
+    "defaults": 239
+  }
+]

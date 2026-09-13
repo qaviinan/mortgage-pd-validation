@@ -1,0 +1,5 @@
+variable,direction,violation_rate,n
+fico,-1,0.0,5000
+ltv,1,0.0,5000
+dti,1,0.0,5000
+orig_rate,1,0.0,5000

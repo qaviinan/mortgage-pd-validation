@@ -1,0 +1,17 @@
+variable,type,assoc
+orig_upb,numeric,0.2561094874675815
+super_conforming,categorical,0.1621798935289844
+property_type,categorical,0.14935515204022407
+dti,numeric,0.10763941874291089
+channel,categorical,0.10182884536766905
+ltv,numeric,-0.09783101781781556
+cltv,numeric,-0.09330905943182041
+loan_purpose,categorical,0.07016860717321556
+mi_pct,numeric,-0.06687157379183137
+occupancy,categorical,0.06551557807412875
+fico,numeric,-0.04643479409327604
+num_units,numeric,0.03917545588594539
+num_borrowers,numeric,-0.03362615903406152
+orig_rate,numeric,0.031584832768658366
+orig_term,numeric,0.03020431989995766
+first_time_homebuyer,categorical,0.020173822511857044

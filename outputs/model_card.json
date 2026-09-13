@@ -1,0 +1,494 @@
+{
+  "features": {
+    "numeric": [
+      "fico",
+      "ltv",
+      "cltv",
+      "dti",
+      "orig_upb",
+      "orig_rate",
+      "orig_term",
+      "mi_pct",
+      "num_borrowers",
+      "num_units"
+    ],
+    "categorical": [
+      "loan_purpose",
+      "occupancy",
+      "property_type",
+      "channel",
+      "first_time_homebuyer",
+      "super_conforming"
+    ],
+    "monotone": {
+      "fico": -1,
+      "ltv": 1,
+      "cltv": 1,
+      "dti": 1,
+      "orig_rate": 1
+    }
+  },
+  "train_vintages": [
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "tune_vintages": [
+    2016
+  ],
+  "train_rows": 270948,
+  "train_defaults": 1359,
+  "challenger": {
+    "binning": "optbinning BinningProcess, monotonic trends per config, max 8 bins",
+    "iv": [
+      {
+        "name": "fico",
+        "dtype": "numerical",
+        "n_bins": 8,
+        "iv": 0.9417207303061154,
+        "js": 0.10945975121944146
+      },
+      {
+        "name": "orig_rate",
+        "dtype": "numerical",
+        "n_bins": 8,
+        "iv": 0.4247366709498501,
+        "js": 0.049477645393431635
+      },
+      {
+        "name": "num_borrowers",
+        "dtype": "numerical",
+        "n_bins": 2,
+        "iv": 0.3016250568835944,
+        "js": 0.03719810650225927
+      },
+      {
+        "name": "dti",
+        "dtype": "numerical",
+        "n_bins": 8,
+        "iv": 0.2732626737884067,
+        "js": 0.03324148033358826
+      },
+      {
+        "name": "ltv",
+        "dtype": "numerical",
+        "n_bins": 8,
+        "iv": 0.17155272536787108,
+        "js": 0.02053915410125107
+      },
+      {
+        "name": "cltv",
+        "dtype": "numerical",
+        "n_bins": 8,
+        "iv": 0.15528213409574998,
+        "js": 0.018587794864885127
+      },
+      {
+        "name": "orig_term",
+        "dtype": "numerical",
+        "n_bins": 3,
+        "iv": 0.14057530161819473,
+        "js": 0.017258983632357512
+      },
+      {
+        "name": "loan_purpose",
+        "dtype": "categorical",
+        "n_bins": 3,
+        "iv": 0.07296110573536378,
+        "js": 0.009074166657064668
+      },
+      {
+        "name": "orig_upb",
+        "dtype": "numerical",
+        "n_bins": 6,
+        "iv": 0.06304457332979821,
+        "js": 0.00782103190179397
+      },
+      {
+        "name": "mi_pct",
+        "dtype": "numerical",
+        "n_bins": 4,
+        "iv": 0.04887366429281339,
+        "js": 0.006054125130046754
+      },
+      {
+        "name": "occupancy",
+        "dtype": "categorical",
+        "n_bins": 3,
+        "iv": 0.02097012554450512,
+        "js": 0.002595215832001548
+      },
+      {
+        "name": "first_time_homebuyer",
+        "dtype": "categorical",
+        "n_bins": 2,
+        "iv": 0.020193674133393305,
+        "js": 0.0025137804274599565
+      },
+      {
+        "name": "property_type",
+        "dtype": "categorical",
+        "n_bins": 3,
+        "iv": 0.01526293966814999,
+        "js": 0.0019050330940266775
+      },
+      {
+        "name": "channel",
+        "dtype": "categorical",
+        "n_bins": 3,
+        "iv": 0.010882759558120448,
+        "js": 0.0013597190574159176
+      },
+      {
+        "name": "super_conforming",
+        "dtype": "categorical",
+        "n_bins": 2,
+        "iv": 0.008835485285435823,
+        "js": 0.001090713837388086
+      },
+      {
+        "name": "num_units",
+        "dtype": "numerical",
+        "n_bins": 1,
+        "iv": 1.9869798710499813e-08,
+        "js": 2.483724836761206e-09
+      }
+    ],
+    "C": 1.0
+  },
+  "champion": {
+    "params": {
+      "objective": "binary",
+      "metric": "auc",
+      "verbosity": -1,
+      "seed": 20260911,
+      "bagging_freq": 1,
+      "monotone_constraints": [
+        -1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "monotone_constraints_method": "intermediate",
+      "num_threads": 8,
+      "cat_smooth": 20,
+      "min_data_per_group": 200,
+      "num_leaves": 63,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 0.0,
+      "max_bin": 63
+    },
+    "best_iteration": 67,
+    "tune_auc": 0.846977014354778
+  },
+  "champion_search": [
+    {
+      "config": 0,
+      "num_leaves": 7,
+      "min_child_samples": 500,
+      "learning_rate": 0.05,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 1.0,
+      "max_bin": 63,
+      "best_iteration": 115,
+      "tune_auc": 0.8439071927316724
+    },
+    {
+      "config": 1,
+      "num_leaves": 63,
+      "min_child_samples": 100,
+      "learning_rate": 0.05,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "best_iteration": 67,
+      "tune_auc": 0.8439461157473083
+    },
+    {
+      "config": 2,
+      "num_leaves": 63,
+      "min_child_samples": 250,
+      "learning_rate": 0.05,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 0.0,
+      "max_bin": 63,
+      "best_iteration": 48,
+      "tune_auc": 0.8430748593410556
+    },
+    {
+      "config": 3,
+      "num_leaves": 63,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 0.0,
+      "max_bin": 63,
+      "best_iteration": 67,
+      "tune_auc": 0.846977014354778
+    },
+    {
+      "config": 4,
+      "num_leaves": 31,
+      "min_child_samples": 1000,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 255,
+      "best_iteration": 111,
+      "tune_auc": 0.845606780744199
+    },
+    {
+      "config": 5,
+      "num_leaves": 31,
+      "min_child_samples": 100,
+      "learning_rate": 0.02,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 255,
+      "best_iteration": 193,
+      "tune_auc": 0.8461014918954052
+    },
+    {
+      "config": 6,
+      "num_leaves": 31,
+      "min_child_samples": 1000,
+      "learning_rate": 0.02,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 0.0,
+      "max_bin": 63,
+      "best_iteration": 69,
+      "tune_auc": 0.8461541568874634
+    },
+    {
+      "config": 7,
+      "num_leaves": 63,
+      "min_child_samples": 250,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 63,
+      "best_iteration": 173,
+      "tune_auc": 0.8444309356957049
+    },
+    {
+      "config": 8,
+      "num_leaves": 63,
+      "min_child_samples": 250,
+      "learning_rate": 0.05,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "best_iteration": 59,
+      "tune_auc": 0.8445923284133031
+    },
+    {
+      "config": 9,
+      "num_leaves": 31,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 1.0,
+      "lambda_l2": 0.0,
+      "max_bin": 255,
+      "best_iteration": 106,
+      "tune_auc": 0.841986676021278
+    },
+    {
+      "config": 10,
+      "num_leaves": 31,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 1.0,
+      "lambda_l2": 0.0,
+      "max_bin": 255,
+      "best_iteration": 94,
+      "tune_auc": 0.8427232686091277
+    },
+    {
+      "config": 11,
+      "num_leaves": 63,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 255,
+      "best_iteration": 116,
+      "tune_auc": 0.8454430096076047
+    },
+    {
+      "config": 12,
+      "num_leaves": 7,
+      "min_child_samples": 1000,
+      "learning_rate": 0.02,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 0.0,
+      "max_bin": 63,
+      "best_iteration": 213,
+      "tune_auc": 0.8444928878476531
+    },
+    {
+      "config": 13,
+      "num_leaves": 31,
+      "min_child_samples": 1000,
+      "learning_rate": 0.05,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 1.0,
+      "lambda_l2": 1.0,
+      "max_bin": 63,
+      "best_iteration": 72,
+      "tune_auc": 0.8438885806592101
+    },
+    {
+      "config": 14,
+      "num_leaves": 7,
+      "min_child_samples": 500,
+      "learning_rate": 0.05,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 0.0,
+      "max_bin": 255,
+      "best_iteration": 115,
+      "tune_auc": 0.8442742998160991
+    },
+    {
+      "config": 15,
+      "num_leaves": 63,
+      "min_child_samples": 1000,
+      "learning_rate": 0.05,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 1.0,
+      "lambda_l2": 1.0,
+      "max_bin": 63,
+      "best_iteration": 64,
+      "tune_auc": 0.8401961795493417
+    },
+    {
+      "config": 16,
+      "num_leaves": 63,
+      "min_child_samples": 250,
+      "learning_rate": 0.05,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 63,
+      "best_iteration": 97,
+      "tune_auc": 0.8446092793677362
+    },
+    {
+      "config": 17,
+      "num_leaves": 31,
+      "min_child_samples": 500,
+      "learning_rate": 0.02,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.9,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "best_iteration": 172,
+      "tune_auc": 0.845519949574497
+    },
+    {
+      "config": 18,
+      "num_leaves": 7,
+      "min_child_samples": 250,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "best_iteration": 160,
+      "tune_auc": 0.8447549669694231
+    },
+    {
+      "config": 19,
+      "num_leaves": 63,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 1.0,
+      "lambda_l2": 0.0,
+      "max_bin": 63,
+      "best_iteration": 96,
+      "tune_auc": 0.8409711288625902
+    },
+    {
+      "config": 20,
+      "num_leaves": 7,
+      "min_child_samples": 500,
+      "learning_rate": 0.03,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 63,
+      "best_iteration": 162,
+      "tune_auc": 0.8447887556202418
+    },
+    {
+      "config": 21,
+      "num_leaves": 15,
+      "min_child_samples": 500,
+      "learning_rate": 0.02,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "best_iteration": 220,
+      "tune_auc": 0.8462555228399199
+    },
+    {
+      "config": 22,
+      "num_leaves": 63,
+      "min_child_samples": 500,
+      "learning_rate": 0.05,
+      "feature_fraction": 0.6,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 63,
+      "best_iteration": 67,
+      "tune_auc": 0.8460021268351201
+    },
+    {
+      "config": 23,
+      "num_leaves": 7,
+      "min_child_samples": 250,
+      "learning_rate": 0.02,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.7,
+      "lambda_l2": 10.0,
+      "max_bin": 255,
+      "best_iteration": 229,
+      "tune_auc": 0.8451030089491979
+    }
+  ],
+  "seed": 20260911
+}

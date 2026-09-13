@@ -1,0 +1,246 @@
+{
+  "layout": {
+    "orig": 31,
+    "perf": 35
+  },
+  "vintages": [
+    {
+      "vintage": 2006,
+      "orig": {
+        "file": "sample_orig_2006.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2006.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2006.txt",
+        "rows": 3203499,
+        "columns": 35,
+        "parquet": "perf_2006.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2007,
+      "orig": {
+        "file": "sample_orig_2007.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2007.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2007.txt",
+        "rows": 3012061,
+        "columns": 35,
+        "parquet": "perf_2007.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2008,
+      "orig": {
+        "file": "sample_orig_2008.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2008.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2008.txt",
+        "rows": 2456504,
+        "columns": 35,
+        "parquet": "perf_2008.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2009,
+      "orig": {
+        "file": "sample_orig_2009.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2009.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2009.txt",
+        "rows": 3160160,
+        "columns": 35,
+        "parquet": "perf_2009.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2010,
+      "orig": {
+        "file": "sample_orig_2010.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2010.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2010.txt",
+        "rows": 3446018,
+        "columns": 35,
+        "parquet": "perf_2010.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2011,
+      "orig": {
+        "file": "sample_orig_2011.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2011.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2011.txt",
+        "rows": 3631696,
+        "columns": 35,
+        "parquet": "perf_2011.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2012,
+      "orig": {
+        "file": "sample_orig_2012.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2012.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2012.txt",
+        "rows": 4510559,
+        "columns": 35,
+        "parquet": "perf_2012.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2013,
+      "orig": {
+        "file": "sample_orig_2013.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2013.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2013.txt",
+        "rows": 4197674,
+        "columns": 35,
+        "parquet": "perf_2013.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2014,
+      "orig": {
+        "file": "sample_orig_2014.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2014.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2014.txt",
+        "rows": 3394276,
+        "columns": 35,
+        "parquet": "perf_2014.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2015,
+      "orig": {
+        "file": "sample_orig_2015.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2015.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2015.txt",
+        "rows": 3467166,
+        "columns": 35,
+        "parquet": "perf_2015.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2016,
+      "orig": {
+        "file": "sample_orig_2016.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2016.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2016.txt",
+        "rows": 3379650,
+        "columns": 35,
+        "parquet": "perf_2016.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2017,
+      "orig": {
+        "file": "sample_orig_2017.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2017.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2017.txt",
+        "rows": 2800219,
+        "columns": 35,
+        "parquet": "perf_2017.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2018,
+      "orig": {
+        "file": "sample_orig_2018.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2018.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2018.txt",
+        "rows": 2059564,
+        "columns": 35,
+        "parquet": "perf_2018.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    },
+    {
+      "vintage": 2019,
+      "orig": {
+        "file": "sample_orig_2019.txt",
+        "rows": 50000,
+        "columns": 31,
+        "parquet": "orig_2019.parquet"
+      },
+      "perf": {
+        "file": "sample_perf_2019.txt",
+        "rows": 1934614,
+        "columns": 35,
+        "parquet": "perf_2019.parquet"
+      },
+      "perf_loans_not_in_orig": 0,
+      "orig_loans_not_in_perf": 0
+    }
+  ]
+}

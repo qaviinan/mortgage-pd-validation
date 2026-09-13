@@ -1,8 +1,10 @@
 # Mortgage PD model + independent validation report
 
+[![ci](https://github.com/qaviinan/mortgage-pd-validation/actions/workflows/ci.yml/badge.svg)](https://github.com/qaviinan/mortgage-pd-validation/actions/workflows/ci.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![python 3.12](https://img.shields.io/badge/python-3.12-blue) ![SR 26-2](https://img.shields.io/badge/guidance-SR%2026--2%20(2026)-6f42c1)
+
 Build a 36-month probability-of-default model on Freddie Mac single-family loan-level data, then validate it the way a bank model-risk team would under [SR 26-2](https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm) (April 2026). The validation report is the deliverable.
 
-**Deliverables:** [validation report (PDF)](report/report.pdf) · [one-page executive summary (PDF)](report/executive_summary.pdf) · [findings register](outputs/findings.csv) · [SPEC](SPEC.md)
+**Deliverables:** [validation report (PDF)](report/report.pdf) · [one-page executive summary (PDF)](report/executive_summary.pdf) · [findings register](outputs/findings.csv) · [validation tables](outputs/validation/) · [SPEC](SPEC.md)
 
 ![Rank-ordering survives every regime; the PD level does not.](report/figures/fig1_timeline.png)
 
@@ -58,4 +60,4 @@ tests/                      target branches, layout drift, leakage, ingest round
 docs/                       learning-path.md, reference/ (Freddie layout + guide)
 ```
 
-Data is not committed (`data/` is git-ignored except the manifest). Freddie Mac's dataset is free for non-commercial and academic use under its own terms.
+Data and model binaries are not committed (`data/` is git-ignored except the manifest; `outputs/models/` is ignored). Freddie Mac's dataset is free for non-commercial and academic use under its own terms. Code is MIT-licensed.
