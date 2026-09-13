@@ -2,7 +2,7 @@
 title: "Independent Validation of a Mortgage Probability-of-Default Model"
 subtitle: "Champion (gradient-boosted trees) vs challenger (WoE scorecard), Freddie Mac single-family loan-level data"
 author: "Qavi Inan"
-date: "September 12, 2026"
+date: "September 13, 2026"
 geometry: margin=0.9in
 fontsize: 10pt
 colorlinks: true

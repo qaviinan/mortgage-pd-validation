@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-from datetime import date
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -94,7 +94,6 @@ def build_report(d: dict) -> str:
     n_stress = int(d["wf"].query("role=='stress'")["after_amortization_filter"].sum())
     def_stress = int(d["wf"].query("role=='stress'")["defaults"].sum())
     dl_oot = d["delong"].query("role=='oot' and model_1=='champion' and model_2=='challenger'").iloc[0]
-    dl_base = d["delong"].query("role=='oot' and model_1=='champion' and model_2=='baseline'").iloc[0]
     seg_c = d["seg"][(d["seg"]["model"] == "champion") & (d["seg"]["defaults"] >= th["segment_min_defaults"])]
     weak = seg_c.sort_values("auc").head(3)
     top1 = d["dec"].query("model=='champion' and decile==1").iloc[0]
@@ -103,8 +102,7 @@ def build_report(d: dict) -> str:
     covid_ratio = K("covid_exhibit", "citl_ratio_obs_pred"); tune_ratio = K("tune", "citl_ratio_obs_pred")
     psi18 = stab.loc[2018, "psi_champion"]; psi17 = stab.loc[2017, "psi_champion"]
     csi18 = d["csi"][d["csi"]["vintage"] == 2018].sort_values("csi", ascending=False).head(3)
-    perm = d["perm"]; shap = d["shap"]
-    oat = d["oat"].set_index(["variable", "shock"])
+    perm = d["perm"]
     mono_max = d["mono"]["violation_rate"].max()
     champ = d["card"]["champion"]["params"]
     iv = pd.DataFrame(d["card"]["challenger"]["iv"]).sort_values("iv", ascending=False)
@@ -177,7 +175,7 @@ The adverse impact ratio is compared with the 4/5ths rule as a *screen*, and wit
 title: "Independent Validation of a Mortgage Probability-of-Default Model"
 subtitle: "Champion (gradient-boosted trees) vs challenger (WoE scorecard), Freddie Mac single-family loan-level data"
 author: "Qavi Inan"
-date: "{date.today():%B %d, %Y}"
+date: "{datetime.now(tz=UTC):%B %d, %Y}"
 geometry: margin=0.9in
 fontsize: 10pt
 colorlinks: true
@@ -387,7 +385,7 @@ def build_exec_summary(d: dict) -> str:
     return f"""---
 title: "Executive Summary: Independent Validation of a Mortgage PD Model"
 author: "Qavi Inan"
-date: "{date.today():%B %d, %Y}"
+date: "{datetime.now(tz=UTC):%B %d, %Y}"
 geometry: margin=0.65in
 fontsize: 9pt
 colorlinks: true

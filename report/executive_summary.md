@@ -1,7 +1,7 @@
 ---
 title: "Executive Summary: Independent Validation of a Mortgage PD Model"
 author: "Qavi Inan"
-date: "September 12, 2026"
+date: "September 13, 2026"
 geometry: margin=0.65in
 fontsize: 9pt
 colorlinks: true

@@ -17,6 +17,7 @@ from pathlib import Path
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import requests
 import yaml
 
 from pdval.validation import calibration as cal
@@ -188,7 +189,7 @@ def main(argv: list[str] | None = None) -> None:
             R["fairness_meta"] = pd.DataFrame([{"cutoff_p": cutoff, "matched_share": float(grp["area_share_nonwhite"].notna().mean()),
                                                 "groups": "T1 = lowest tertile of area non-white share (reference), T3 = highest"}])
             print(R["fairness_groups_oot"].round(4).to_string(index=False))
-        except Exception as e:  # network or mapping failure must not kill the battery
+        except (requests.RequestException, RuntimeError, KeyError, ValueError, OSError) as e:  # must not kill the battery
             print(f"  fairness proxy skipped: {e!r}")
             reg.add("Fairness", "Low", "Fairness proxy analysis could not be executed",
                     "Census ACS demographic shares unavailable at build time (API key required).", "n/a",
