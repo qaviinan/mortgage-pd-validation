@@ -24,3 +24,6 @@ reading/
 # OS / editor
 .DS_Store
 .ipynb_checkpoints/
+
+# Private notes (never pushed)
+private/

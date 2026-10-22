@@ -1,4 +1,4 @@
-"""Classic models: FICO-only logistic baseline and WoE scorecard challenger (SPEC §5).
+"""Classic models: FICO-only logistic baseline and WoE scorecard challenger.
 
 Kept in an importable module (not the training script) so pickled artifacts load anywhere.
 """

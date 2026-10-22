@@ -1,4 +1,4 @@
-"""Default-target construction with explicit censoring (SPEC §4.3).
+"""Default-target construction with explicit censoring.
 
 Given one vintage's origination + performance tables, produce one row per loan:
 
@@ -29,7 +29,7 @@ def _sql(window: int, dpd_code_min: int, credit_zb: list[int], payoff_zb: list[i
     censor = ", ".join(map(str, censor_zb))
     defect = ", ".join(map(str, defect_zb))
     cutoff_filter = f"AND period <= {cutoff}" if cutoff else ""
-    # Primary definition (decided 2026-09-12): a 90+ DPD month counts as a default event only
+    # Primary definition: a 90+ DPD month counts as a default event only
     # when the borrower is NOT in a forbearance plan that month (Borrower Assistance Plan = 'F').
     # Credit-event terminations (ZB 02/03/09) always count. The pure-DPD definition is the sensitivity.
     # `forbearance_lookback` extends the guard to the N months after a plan ends: in the COVID

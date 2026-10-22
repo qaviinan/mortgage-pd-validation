@@ -185,7 +185,7 @@ def main(argv: list[str] | None = None) -> None:
     if not zips:
         raise SystemExit(
             f"No sample_YYYY.zip files in {raw_dir}/. Download them from Freddie Mac Clarity "
-            "(Data Download -> Sample) and drop them there. See SPEC.md §4.1."
+            "(Data Download -> Sample) and drop them there. See README."
         )
     years = args.years or sorted(zips)
     missing = [y for y in years if y not in zips]

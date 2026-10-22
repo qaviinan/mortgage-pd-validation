@@ -1,4 +1,4 @@
-"""Run the validation battery (SPEC §7) on the scored model frame and emit tables + findings.
+"""Run the validation battery on the scored model frame and emit tables + findings.
 
 Usage:
     uv run python -m pdval.validate --config configs/default.yaml [--skip-fairness] [--fast]

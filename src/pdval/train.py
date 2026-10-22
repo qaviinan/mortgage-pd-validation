@@ -1,4 +1,4 @@
-"""Fit the three models (SPEC §5) and score every loan in the model frame.
+"""Fit the three models and score every loan in the model frame.
 
 Usage:
     uv run python -m pdval.train --config configs/default.yaml

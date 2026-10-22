@@ -1,4 +1,4 @@
-# Project 1 configuration. Every threshold here is quoted in the report BEFORE results.
+# Every threshold here is quoted in the report BEFORE results.
 seed: 20260911
 
 data:
@@ -8,7 +8,7 @@ data:
   layout_xlsx: docs/reference/file_layout_july_2026.xlsx
   performance_cutoff: 202603   # YYYYMM, from release notes (Release 47, July 2026)
 
-vintages:                      # by sample-file vintage = origination year (SPEC §4.4, revised 2026-09-12)
+vintages:                      # by sample-file vintage = origination year
   train: [2009, 2010, 2011, 2012, 2013, 2014, 2015]
   tune: [2016]
   oot: [2017, 2018]

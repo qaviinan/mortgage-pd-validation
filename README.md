@@ -4,7 +4,7 @@
 
 Build a 36-month probability-of-default model on Freddie Mac single-family loan-level data, then validate it the way a bank model-risk team would under [SR 26-2](https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm) (April 2026). The validation report is the deliverable.
 
-**Deliverables:** [validation report (PDF)](report/report.pdf) · [one-page executive summary (PDF)](report/executive_summary.pdf) · [findings register](outputs/findings.csv) · [validation tables](outputs/validation/) · [SPEC](SPEC.md)
+**Deliverables:** [validation report (PDF)](report/report.pdf) · [one-page executive summary (PDF)](report/executive_summary.pdf) · [findings register](outputs/findings.csv) · [validation tables](outputs/validation/)
 
 ![Rank-ordering survives every regime; the PD level does not.](report/figures/fig1_timeline.png)
 
@@ -57,7 +57,7 @@ src/pdval/validation/       discrimination, calibration, stability, sensitivity,
 src/pdval/validate.py       runs the battery -> outputs/validation/*.csv, outputs/findings.csv
 src/pdval/report/           figures.py (house style) and build.py (Markdown -> PDF; every number read from outputs/)
 tests/                      target branches, layout drift, leakage, ingest round-trip, validation metrics
-docs/                       learning-path.md, reference/ (Freddie layout + guide)
+docs/reference/              Freddie file layout (July 2026)
 ```
 
 Data and model binaries are not committed (`data/` is git-ignored except the manifest; `outputs/models/` is ignored). Freddie Mac's dataset is free for non-commercial and academic use under its own terms. Code is MIT-licensed.

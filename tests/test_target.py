@@ -1,4 +1,4 @@
-"""Hand-built loan histories covering every branch of the target definition (SPEC §4.3)."""
+"""Hand-built loan histories covering every branch of the target definition."""
 
 import pandas as pd
 import pytest

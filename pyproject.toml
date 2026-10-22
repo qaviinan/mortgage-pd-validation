@@ -1,7 +1,7 @@
 [project]
 name = "pdval"
 version = "0.1.0"
-description = "Mortgage PD model + independent validation battery (Project 1)"
+description = "Mortgage PD model and validation report on Freddie Mac loan-level data"
 
 authors = [
     { name = "qaviinan", email = "work.qavi@proton.me" }
