@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from scipy import stats
+from scipy import optimize, special, stats
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss
 
@@ -61,10 +61,11 @@ def slope_intercept(y: np.ndarray, p: np.ndarray) -> dict:
         se_a, se_b = float(np.sqrt(cov[0, 0])), float(np.sqrt(cov[1, 1]))
     except np.linalg.LinAlgError:
         se_a = se_b = np.nan
-    # intercept with slope fixed at 1
-    off = LogisticRegression(C=1e9, max_iter=1000, fit_intercept=True)
-    a_fixed = float(np.log(y.mean() / (1 - y.mean())) - np.mean(lp[:, 0])) if 0 < y.mean() < 1 else np.nan
-    _ = off
+    # intercept with slope fixed at 1: solve sum(y - expit(a + logit p)) = 0
+    if 0 < y.mean() < 1:
+        a_fixed = float(optimize.brentq(lambda a: np.sum(y - special.expit(a + lp[:, 0])), -20, 20))
+    else:
+        a_fixed = np.nan
     return {"intercept": a, "intercept_se": se_a, "slope": b, "slope_se": se_b,
             "slope_ci_low": b - 1.96 * se_b, "slope_ci_high": b + 1.96 * se_b,
             "intercept_fixed_slope": a_fixed}

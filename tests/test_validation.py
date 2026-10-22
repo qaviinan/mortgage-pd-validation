@@ -37,6 +37,7 @@ def test_calibration_ideal_model():
     s = cal.summary(y, p)
     assert abs(s["citl_ratio_obs_pred"] - 1) < 0.1
     assert 0.85 < s["slope"] < 1.15
+    assert abs(s["intercept_fixed_slope"]) < 0.1
     assert s["brier_skill"] > 0
     assert cal.reliability_table(y, p)["n"].sum() == len(y)
 
