@@ -1,8 +1,8 @@
 """Disparate-impact proxy analysis on geography-derived groups.
 
-The data carries no protected attributes. Groups are built from the demographic composition of the
-loan's metro area (ACS 5-year table B03002 at CBSA / metropolitan-division level), in the spirit of
-the CFPB's 2014 proxy methodology but *without* the surname component. Results are a screen, not a
+The data has no protected attributes, so groups come from the demographic make-up of the loan's
+metro area (ACS 5-year table B03002, CBSA or metropolitan division). This follows the CFPB's 2014
+proxy method without its surname component. The results are a screen and cannot support a
 compliance determination.
 """
 
@@ -98,7 +98,7 @@ def group_metrics(y: np.ndarray, p: np.ndarray, group: pd.Series, cutoff: float,
 
 
 def proxy_feature_audit(X: pd.DataFrame, share: pd.Series, numeric: list[str], categorical: list[str]) -> pd.DataFrame:
-    """How much of the area demographic share does each model input carry? (Spearman for numerics, eta² for categoricals.)"""
+    """Association of each input with the area demographic share (Spearman for numerics, correlation ratio for categoricals)."""
     rows = []
     m = share.notna()
     for c in numeric:

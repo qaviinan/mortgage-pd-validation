@@ -32,7 +32,6 @@ from sklearn.metrics import log_loss, roc_auc_score
 from pdval.models.classic import FicoBaseline, WoeScorecard
 
 
-# ----------------------------------------------------------------------------- champion
 def lgb_dataset(df: pd.DataFrame, y: np.ndarray | None, cols: list[str], cats: list[str], reference=None):
     x = df[cols]
     return lgb.Dataset(x, label=y, categorical_feature=cats, free_raw_data=False, reference=reference)
@@ -82,7 +81,6 @@ def fit_champion(train: pd.DataFrame, tune: pd.DataFrame, cols: list[str], cats:
     return booster, {"params": params, "best_iteration": iters, "tune_auc": auc}, history
 
 
-# ----------------------------------------------------------------------------- main
 def metrics(y: np.ndarray, p: np.ndarray) -> dict:
     return {"n": len(y), "defaults": int(y.sum()), "auc": float(roc_auc_score(y, p)),
             "logloss": float(log_loss(y, p)), "mean_pred": float(p.mean()), "obs_rate": float(y.mean())}
@@ -119,7 +117,6 @@ def main(argv: list[str] | None = None) -> None:
     champion, champ_info, history = fit_champion(train, tune, cols, cat, mono, seed, args.n_configs)
     print(f"  best: iters={champ_info['best_iteration']} tune AUC={champ_info['tune_auc']:.4f}")
 
-    # Score everything
     pred = frame[["loan_id", "vintage", "role", "y"]].copy()
     pred["p_baseline"] = baseline.predict_proba(frame)
     pred["p_challenger"] = challenger.predict_proba(frame)

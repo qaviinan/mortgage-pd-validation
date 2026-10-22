@@ -8,11 +8,11 @@ Given one vintage's origination + performance tables, produce one row per loan:
 `y` is 1/0 for loans observable over the full window and NULL for excluded loans, with
 `exclusion_reason` in {"defect", "censored", "incomplete_window"}.
 
-Loan age is computed from First Payment Date (months between, +1), *not* from the
-Loan Age field, because Freddie resets Loan Age on modification.
+Loan age is computed from First Payment Date (months between, +1), not from the Loan Age
+field, because Freddie resets Loan Age on modification.
 
-All logic is a single DuckDB SQL statement so it runs identically on a 15M-row vintage
-and on a 10-row unit-test fixture.
+The logic is one DuckDB query, so the same code runs on a 15M-row vintage and on the
+unit-test fixtures.
 """
 
 from __future__ import annotations
@@ -29,15 +29,14 @@ def _sql(window: int, dpd_code_min: int, credit_zb: list[int], payoff_zb: list[i
     censor = ", ".join(map(str, censor_zb))
     defect = ", ".join(map(str, defect_zb))
     cutoff_filter = f"AND period <= {cutoff}" if cutoff else ""
-    # Primary definition: a 90+ DPD month counts as a default event only
-    # when the borrower is NOT in a forbearance plan that month (Borrower Assistance Plan = 'F').
-    # Credit-event terminations (ZB 02/03/09) always count. The pure-DPD definition is the sensitivity.
-    # `forbearance_lookback` extends the guard to the N months after a plan ends: in the COVID
-    # data the plan flag drops one or two months before the payment deferral is booked, so the
-    # loan shows 90+ with no plan in between and then cures. With lookback=0 only the same month
-    # is guarded.
-    # `exclude_disaster_dpd` applies the same guard to months flagged "Delinquency Due to Disaster"
-    # (servicers used this flag for COVID hardship when no formal plan was booked).
+    # A 90+ DPD month counts as a default only if the loan is not in a forbearance plan
+    # (Borrower Assistance Plan = 'F') that month. Credit-event terminations (ZB 02/03/09)
+    # always count.
+    # forbearance_lookback extends the guard to N months after a plan ends. In the COVID data
+    # the plan flag drops a month or two before the deferral is booked, so the loan shows 90+
+    # with no plan and then cures.
+    # exclude_disaster_dpd applies the same guard to "Delinquency Due to Disaster" months, which
+    # servicers used for COVID hardship when no formal plan was booked.
     hardship = []
     if exclude_forbearance_dpd:
         hardship.append("pf.assistance_plan = 'F'")
@@ -136,9 +135,9 @@ def build_target(
 
     `orig` / `perf` may be pandas DataFrames or parquet paths. `dpd_threshold` is in days;
     Freddie codes 30-day buckets, so 90 -> status code >= 3, 60 -> >= 2.
-    `exclude_forbearance_dpd=True` (primary) ignores DPD months spent in a forbearance plan or
-    within `forbearance_lookback` months after one; False gives the pure ever-90+ definition
-    used as a sensitivity.
+    `exclude_forbearance_dpd=True` (primary) ignores DPD months in a forbearance plan or within
+    `forbearance_lookback` months after one. Turning off both guards gives the pure ever-90+
+    sensitivity.
     """
     own = con is None
     con = con or duckdb.connect()

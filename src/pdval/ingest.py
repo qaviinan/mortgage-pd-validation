@@ -84,8 +84,8 @@ def extract(zip_path: Path, interim_dir: Path) -> tuple[Path, Path]:
         names = z.namelist()
         txts = [n for n in names if n.lower().endswith(".txt")]
         orig = [n for n in txts if "orig" in n.lower()]
-        # Freddie names the performance file sample_svcg_YYYY.txt ("servicing"); the user
-        # guide calls it sample_perf_YYYY.txt. Accept either: the non-orig txt is performance.
+        # Freddie ships sample_svcg_YYYY.txt but the user guide says sample_perf_YYYY.txt,
+        # so take whichever non-orig txt is present.
         perf = [n for n in txts if n not in orig]
         if len(orig) != 1 or len(perf) != 1:
             raise RuntimeError(f"{zip_path.name}: expected one orig and one perf/svcg txt, found {names}")
@@ -139,12 +139,12 @@ def ingest_vintage(year: int, zip_path: Path, cfg: dict, con: duckdb.DuckDBPyCon
         o = load_pipe_file(con, orig_txt, ORIG_COLUMNS, ORIG_CASTS, processed / f"orig_{year}.parquet")
         p = load_pipe_file(con, perf_txt, PERF_COLUMNS, PERF_CASTS, processed / f"perf_{year}.parquet")
     finally:
-        # The extracted text is ~0.5 GB per vintage and fully regenerable from the zip:
-        # drop it as soon as the parquet exists so ingestion fits in a few hundred MB of headroom.
+        # The extracted text is ~0.5 GB per vintage and can be re-extracted from the zip,
+        # so delete it once the parquet exists to keep disk use low.
         if not keep_interim:
             for f in (orig_txt, perf_txt):
                 f.unlink(missing_ok=True)
-    # Sanity: every perf loan appears in orig and vice versa
+    # every perf loan should appear in orig and vice versa
     orphan = con.execute(
         f"""
         SELECT

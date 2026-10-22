@@ -76,13 +76,12 @@ def main(argv: list[str] | None = None) -> None:
     out = Path("outputs/validation"); out.mkdir(parents=True, exist_ok=True)
     df, models = load(cfg)
     reg = Register()
-    R = {}  # everything we save
+    R = {}  # tables written to outputs/validation
 
     roles = ["train", "tune", "oot", "stress", "covid_exhibit"]
     by_role = {r: df[df["role"] == r] for r in roles}
     oot = by_role["oot"]; train = by_role["train"]
 
-    # ------------------------------------------------------------------ 7.2 discrimination
     print("[discrimination]")
     rows = []
     for m in MODELS:
@@ -94,7 +93,7 @@ def main(argv: list[str] | None = None) -> None:
     R["discrimination_by_role"] = pd.DataFrame(rows)
     print(R["discrimination_by_role"].pivot(index="role", columns="model", values="auc").round(4).to_string())
 
-    # pairwise DeLong on OOT and on stress
+    # pairwise DeLong on tune, OOT and stress
     dl = []
     for r in ("tune", "oot", "stress"):
         d = by_role[r]
@@ -115,7 +114,6 @@ def main(argv: list[str] | None = None) -> None:
     R["segments_oot"] = pd.concat(seg_rows, ignore_index=True)
     R["deciles_oot"] = pd.concat([disc.decile_table(oot["y"].to_numpy(), oot[f"p_{m}"].to_numpy()).assign(model=m) for m in MODELS])
 
-    # ------------------------------------------------------------------ 7.3 calibration
     print("[calibration]")
     crow, rel = [], []
     for m in MODELS:
@@ -133,7 +131,6 @@ def main(argv: list[str] | None = None) -> None:
     show = R["calibration"][R["calibration"]["role"].isin(roles)]
     print(show.pivot(index="role", columns="model", values="citl_ratio_obs_pred").round(3).to_string())
 
-    # ------------------------------------------------------------------ 7.4 stability
     print("[stability]")
     srows = []
     ref_scores = {m: train[f"p_{m}"].to_numpy() for m in MODELS}
@@ -151,7 +148,6 @@ def main(argv: list[str] | None = None) -> None:
     R["csi_by_vintage"] = pd.concat(csi, ignore_index=True)
     print(R["stability_by_vintage"][["vintage", "role", "psi_champion", "auc_champion", "obs_rate", "mean_pred_champion"]].round(4).to_string(index=False))
 
-    # ------------------------------------------------------------------ 7.6 sensitivity (champion)
     print("[sensitivity]")
     booster = models["champion"]
     def predict_champ(X: pd.DataFrame) -> np.ndarray:
@@ -185,7 +181,6 @@ def main(argv: list[str] | None = None) -> None:
     print(R["perm_importance_oot"].head(6).round(4).to_string(index=False))
     print(R["oat_oot"].round(4).to_string(index=False))
 
-    # ------------------------------------------------------------------ 7.8 fairness proxy
     if not args.skip_fairness:
         print("[fairness proxy]")
         try:
@@ -208,7 +203,7 @@ def main(argv: list[str] | None = None) -> None:
                     "Census ACS demographic shares unavailable at build time (API key required).", "n/a",
                     "Re-run with CENSUS_API_KEY set; treat the fairness section as incomplete until then.")
 
-    # ------------------------------------------------------------------ findings against thresholds
+    # findings against config thresholds
     d = R["discrimination_by_role"].set_index(["model", "role"])
     c = R["calibration"].set_index(["model", "role"])
     auc_oot = d.loc[("champion", "oot"), "auc"]; auc_tr = d.loc[("champion", "train"), "auc"]; auc_tu = d.loc[("champion", "tune"), "auc"]
@@ -311,7 +306,6 @@ def main(argv: list[str] | None = None) -> None:
             f"across {len(train):,} loans after exclusion.", "n/a",
             "State scope in intended use; use the Standard dataset for segment-level recalibration if the model is adopted.", ["feature_waterfall"])
 
-    # ------------------------------------------------------------------ save
     for k, v in R.items():
         if isinstance(v, pd.DataFrame):
             v.to_csv(out / f"{k}.csv", index=False)

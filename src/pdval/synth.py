@@ -1,8 +1,7 @@
-"""Synthetic Freddie-layout fixture generator (tests + CI smoke runs; never for results).
+"""Synthetic Freddie-layout fixtures for tests and smoke runs (never for results).
 
-Writes sample_orig_<year>.txt / sample_perf_<year>.txt in the exact 31/35-column
-pipe-delimited layout, optionally zipped as sample_<year>.zip so the real ingest path
-is exercised end to end.
+Writes sample_orig_<year>.txt and sample_svcg_<year>.txt in the 31/35-column pipe-delimited
+layout, zipped as sample_<year>.zip by default so the real ingest path is exercised.
 """
 
 from __future__ import annotations
@@ -49,7 +48,6 @@ def make_vintage(year: int, n_loans: int, out_dir: Path, *, seed: int = 0, defau
         )
         orig_lines.append("|".join(str(row[c]) for c in ORIG_COLUMNS))
 
-        # performance path
         u = rng.random()
         default_month = int(rng.integers(6, horizon_months)) if u < default_rate * risk / 0.05 else None
         prepay_month = int(rng.integers(3, horizon_months)) if (default_month is None and rng.random() < prepay_rate) else None

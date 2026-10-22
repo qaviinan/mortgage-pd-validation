@@ -11,7 +11,6 @@ from optbinning import BinningProcess
 from sklearn.linear_model import LogisticRegression
 
 
-# ----------------------------------------------------------------------------- baseline
 class FicoBaseline:
     def __init__(self):
         self.lr = LogisticRegression(C=1e6, max_iter=1000)
@@ -32,7 +31,6 @@ class FicoBaseline:
         return self.lr.predict_proba(self._x(df))[:, 1]
 
 
-# ----------------------------------------------------------------------------- challenger
 class WoeScorecard:
     """optbinning BinningProcess (monotonic trend for numerics) -> WoE -> logistic regression."""
 

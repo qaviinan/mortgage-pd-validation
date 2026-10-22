@@ -8,8 +8,8 @@ import pandas as pd
 
 def psi(reference: np.ndarray, current: np.ndarray, bins: int = 10, edges: np.ndarray | None = None,
         eps: float = 1e-6) -> dict:
-    """Population Stability Index with bins defined on the reference distribution (quantile edges).
-    Conventional cut-offs 0.10 / 0.25 are industry folklore, not error-rate based (Yurdakul 2018)."""
+    """Population Stability Index on quantile bins of the reference distribution.
+    The usual 0.10 / 0.25 cut-offs are convention, not derived from error rates (Yurdakul 2018)."""
     reference = np.asarray(reference, dtype=float); current = np.asarray(current, dtype=float)
     reference = reference[~np.isnan(reference)]; current = current[~np.isnan(current)]
     if edges is None:

@@ -51,7 +51,7 @@ def vintage_summary(year: int, orig: pd.DataFrame, target: pd.DataFrame) -> dict
         s = s[(s != NA_CODES.get(col, -1))]
         return {f"{k:g}": float(v) for k, v in s.quantile([0.05, 0.25, 0.5, 0.75, 0.95]).round(2).items()}
     out["quantiles"] = {c: q(c) for c in ("fico", "ltv", "cltv", "dti", "orig_upb", "orig_rate")}
-    # Default rate by FICO band, LTV band — the monotonicity sanity check
+    # default rate by band, as a monotonicity sanity check
     def band_rate(col, bins, labels):
         s = obs[col].where(obs[col] != NA_CODES.get(col, -1))
         g = obs.groupby(pd.cut(s, bins=bins, labels=labels), observed=True)["y"]
@@ -66,7 +66,7 @@ def vintage_summary(year: int, orig: pd.DataFrame, target: pd.DataFrame) -> dict
 
 def render_md(summaries: list[dict], cfg: dict) -> str:
     L = [
-        "# First pass — Freddie Mac sample vintages\n",
+        "# First pass: Freddie Mac sample vintages\n",
         (
             f"Window {cfg['target']['window_months']}m, 90+ DPD{' (excluding months in forbearance plan)' if cfg['target'].get('exclude_forbearance_dpd', True) else ''} or credit-event termination. "
             f"Performance cutoff {cfg['data']['performance_cutoff']}.\n"

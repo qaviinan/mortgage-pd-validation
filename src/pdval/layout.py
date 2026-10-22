@@ -1,10 +1,9 @@
 """Column layout for the Freddie Mac Single-Family Loan-Level Dataset.
 
-The raw files are pipe-delimited with **no header row**. Column order is defined by
-Freddie's file-layout spreadsheet (docs/reference/file_layout_july_2026.xlsx). We keep a
-canonical snake_case name per field position and *verify* it against the spreadsheet so
-that a silent layout change in a future release fails loudly instead of mis-assigning
-columns.
+The raw files are pipe-delimited with no header row. Column order comes from Freddie's
+file-layout spreadsheet (docs/reference/file_layout_july_2026.xlsx). Each position gets a
+snake_case name that is checked against the spreadsheet, so a layout change in a future
+release raises an error instead of mislabelling columns.
 """
 
 from __future__ import annotations
@@ -12,9 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-# (position, canonical_name, freddie_attribute_prefix)
-# The prefix is matched case-insensitively against the start of the spreadsheet's
-# "Attribute Name" cell; prefixes are long enough to be unambiguous.
+# (position, name, prefix of the spreadsheet's "Attribute Name", matched case-insensitively)
 ORIG_FIELDS: list[tuple[int, str, str]] = [
     (1, "fico", "Classic FICO"),
     (2, "first_payment_date", "First Payment Date"),
@@ -90,8 +87,8 @@ PERF_FIELDS: list[tuple[int, str, str]] = [
 ORIG_COLUMNS = [name for _, name, _ in ORIG_FIELDS]
 PERF_COLUMNS = [name for _, name, _ in PERF_FIELDS]
 
-# Columns we materialise with real types in the processed parquet. Everything else stays
-# VARCHAR so a stray value never aborts ingestion.
+# Typed columns in the processed parquet. Everything else stays VARCHAR so a stray value
+# can't abort ingestion.
 ORIG_CASTS: dict[str, str] = {
     "fico": "INTEGER",
     "first_payment_date": "INTEGER",   # YYYYMM

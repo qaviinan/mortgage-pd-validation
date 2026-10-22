@@ -4,10 +4,10 @@ CONFIG ?= configs/default.yaml
 YEARS  ?=
 
 help:
-	@echo "make data    - ingest data/raw/sample_YYYY.zip -> data/processed/*.parquet (+ manifest)"
-	@echo "make target  - build default targets + waterfall for every ingested vintage"
-	@echo "make test    - pytest (uses synthetic fixtures, no download needed)"
-	@echo "make smoke   - generate a synthetic vintage into data/raw and run ingest on it"
+	@echo "make data    - ingest data/raw/sample_YYYY.zip into data/processed/*.parquet, write manifest"
+	@echo "make target  - build default targets and waterfall for each ingested vintage"
+	@echo "make test    - pytest on synthetic fixtures (no download needed)"
+	@echo "make smoke   - synthetic vintage through ingest and target, in data/smoke/"
 	@echo "make lint    - ruff"
 
 data:
@@ -25,7 +25,7 @@ test:
 lint:
 	uv run ruff check src tests
 
-smoke:  ## synthetic end-to-end run in data/smoke/ (never touches data/raw)
+smoke:  ## writes only to data/smoke/, never data/raw
 	uv run python -c "from pathlib import Path; from pdval.synth import make_vintage; print(make_vintage(2016, 2000, Path('data/smoke/raw'), seed=7))"
 	uv run python -m pdval.ingest --config $(CONFIG) --years 2016 --raw-dir data/smoke/raw --interim-dir data/smoke/interim --processed-dir data/smoke/processed --manifest data/smoke/manifest.json
 	uv run python -m pdval.firstpass --config $(CONFIG) --processed-dir data/smoke/processed --out-dir data/smoke/outputs

@@ -1,6 +1,6 @@
 """Discrimination metrics: AUC/Gini/KS/PR-AUC with bootstrap CIs, DeLong test, segment and decile tables.
 
-Pure functions over (y_true, p_pred[, segments]). No I/O, no plotting, no dataset-specific names.
+Pure functions over (y_true, p_pred[, segments]).
 """
 
 from __future__ import annotations
