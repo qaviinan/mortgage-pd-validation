@@ -31,7 +31,7 @@ smoke:  ## synthetic end-to-end run in data/smoke/ (never touches data/raw)
 	uv run python -m pdval.firstpass --config $(CONFIG) --processed-dir data/smoke/processed --out-dir data/smoke/outputs
 
 clean:
-	rm -rf data/interim data/processed outputs/*.json outputs/*.md
+	rm -rf data/interim data/processed
 
 train:
 	uv run python -m pdval.train --config $(CONFIG)
