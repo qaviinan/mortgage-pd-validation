@@ -1,0 +1,13 @@
+method,variable,direction,violation_rate,n
+basic,fico,-1,0.0,5000
+basic,ltv,1,0.0,5000
+basic,dti,1,0.0,5000
+basic,orig_rate,1,0.0,5000
+intermediate,fico,-1,0.0,5000
+intermediate,ltv,1,0.0,5000
+intermediate,dti,1,0.0,5000
+intermediate,orig_rate,1,0.0,5000
+advanced,fico,-1,0.0152,5000
+advanced,ltv,1,0.1116,5000
+advanced,dti,1,0.0446,5000
+advanced,orig_rate,1,0.0012,5000

@@ -1,4 +1,4 @@
-# Every threshold here is quoted in the report BEFORE results.
+# Pipeline configuration.
 seed: 20260911
 
 data:
@@ -39,7 +39,7 @@ features:
   excluded_by_design: [state, msa, zip3, seller_name, servicer_name, vintage]   # segmentation only
   monotone: {fico: -1, ltv: 1, cltv: 1, dti: 1, orig_rate: 1}
 
-thresholds:                    # pre-registered; a breach becomes a finding
+thresholds:                    # a breach becomes a finding
   auc_oot_min: 0.70
   auc_train_oot_gap_max: 0.03
   segment_auc_min: 0.65

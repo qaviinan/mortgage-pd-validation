@@ -20,6 +20,7 @@ import pandas as pd
 import requests
 import yaml
 
+from pdval.train import lgb_dataset
 from pdval.validation import calibration as cal
 from pdval.validation import discrimination as disc
 from pdval.validation import fairness as fair
@@ -169,6 +170,18 @@ def main(argv: list[str] | None = None) -> None:
     R["oat_oot"] = sens.one_at_a_time(predict_champ, X_oot, {"fico": [-20, -50], "ltv": [5, 10], "dti": [5, 10], "orig_rate": [0.5, 1.0]})
     mono = cfg["features"]["monotone"]
     R["monotonicity"] = pd.DataFrame([sens.monotonicity_check(predict_champ, X_oot, c, d, grids[c], seed=seed) for c, d in mono.items() if c in grids])
+    # same hyperparameters under each LightGBM constraint method
+    card = json.loads(Path("outputs/model_card.json").read_text())
+    dtrain = lgb_dataset(train, train["y"].to_numpy(), cols, cat)
+    mrows = []
+    for method in ("basic", "intermediate", "advanced"):
+        b = lgb.train({**card["champion"]["params"], "monotone_constraints_method": method}, dtrain,
+                      num_boost_round=card["champion"]["best_iteration"])
+        for col, direction in mono.items():
+            if col in grids:
+                r = sens.monotonicity_check(lambda X, b=b: b.predict(X[cols]), X_oot, col, direction, grids[col], seed=seed)
+                mrows.append({"method": method, **r})
+    R["monotone_methods"] = pd.DataFrame(mrows)
     print(R["perm_importance_oot"].head(6).round(4).to_string(index=False))
     print(R["oat_oot"].round(4).to_string(index=False))
 
@@ -229,10 +242,21 @@ def main(argv: list[str] | None = None) -> None:
             reg.add("Calibration", sev, f"Calibration-in-the-large breach on {r} (model {direction})",
                     f"predicted {c.loc[('champion', r), 'citl_predicted']:.2%} vs observed {c.loc[('champion', r), 'citl_observed']:.2%} (obs/pred = {ratio:.2f}x)",
                     f"|rel error| <= {th['calib_in_large_rel_tol']:.0%}", rec, ["calibration"])
-    slope = c.loc[("champion", "oot"), "slope"]; lo, hi = th["calib_slope_range"]
-    if not (lo <= slope <= hi):
-        reg.add("Calibration", "Medium", "OOT calibration slope outside range", f"slope={slope:.2f} (SE {c.loc[('champion','oot'),'slope_se']:.2f})",
-                f"[{lo}, {hi}]", "Slope < 1 means predictions are too extreme (over-fit); consider shrinkage / recalibration.", ["calibration"])
+    oot_vintages = sorted(oot["vintage"].unique())
+    for v in oot_vintages:
+        rel = c.loc[("champion", f"vintage_{v}"), "citl_rel_error"]; ratio = c.loc[("champion", f"vintage_{v}"), "citl_ratio_obs_pred"]
+        if abs(rel) > th["calib_in_large_rel_tol"]:
+            direction = "under-predicts" if ratio > 1 else "over-predicts"
+            reg.add("Calibration", "Medium", f"Calibration-in-the-large breach on vintage {v} (model {direction})",
+                    f"predicted {c.loc[('champion', f'vintage_{v}'), 'citl_predicted']:.2%} vs observed {c.loc[('champion', f'vintage_{v}'), 'citl_observed']:.2%} (obs/pred = {ratio:.2f}x)",
+                    f"|rel error| <= {th['calib_in_large_rel_tol']:.0%}", "The pooled OOT ratio hides offsetting vintage errors; monitor by vintage.", ["calibration"])
+    lo, hi = th["calib_slope_range"]
+    bad = {r: c.loc[("champion", r), "slope"] for r in ("train", "tune", "oot") if not lo <= c.loc[("champion", r), "slope"] <= hi}
+    if bad:
+        rec = ("Slope > 1: predictions are too compressed (early stopping at few trees). Recalibrate on the tune vintage."
+               if np.mean(list(bad.values())) > 1 else "Slope < 1: predictions are too extreme (over-fit). Add shrinkage or recalibrate.")
+        reg.add("Calibration", "Medium", "Calibration slope outside range", ", ".join(f"{r} {v:.2f}" for r, v in bad.items()),
+                f"[{lo}, {hi}]", rec, ["calibration"])
     st = R["stability_by_vintage"]
     for _, s in st.iterrows():
         if s["role"] in ("oot", "covid_exhibit") and s["psi_champion"] >= th["psi_red"]:
@@ -240,7 +264,7 @@ def main(argv: list[str] | None = None) -> None:
                     "Population shift vs development sample; confirm inputs (CSI) and recalibrate if persistent.", ["stability_by_vintage", "csi_by_vintage"])
     stress_psi = st[st["role"] == "stress"]["psi_champion"]
     if (stress_psi >= th["psi_red"]).any():
-        reg.add("Stability", "Low", "Crisis vintages are outside the development population (score PSI > 1.5)",
+        reg.add("Stability", "Low", "Crisis vintages are outside the development population",
                 f"PSI 2006–08 = {', '.join(f'{v:.2f}' for v in stress_psi)}", f"< {th['psi_red']}",
                 "Expected by design of the stress backtest; documents that the model would be extrapolating in a 2006-style book.",
                 ["stability_by_vintage", "csi_by_vintage"])
@@ -257,26 +281,35 @@ def main(argv: list[str] | None = None) -> None:
             if g in f.index and abs(f.loc[g, "pred_over_obs"] - 1) > th["calib_in_large_rel_tol"]:
                 reg.add("Fairness", "Low", f"Within-group calibration drift for proxy group {g}",
                         f"pred/obs = {f.loc[g, 'pred_over_obs']:.2f}", f"within {th['calib_in_large_rel_tol']:.0%}", "Monitor; consider group-level recalibration check.")
-    # remediated during validation (kept in the register with status)
-    reg.add("Sensitivity", "High", "Declared monotone constraints were not enforced by the original champion configuration",
-            "LightGBM 4.7, constraint method 'advanced': grid test showed predictions moving the wrong way for "
-            "20% of loans on LTV (worst raw-score step -0.042) and 14% on DTI; the 'basic' and 'intermediate' methods gave 0%.",
-            "0% violations on a 1-unit grid", "Champion re-fit with the exact 'intermediate' constraint method; post-fix grid test in this report.",
-            ["monotonicity"], status="Remediated")
-    # conceptual-soundness observations recorded as findings (not threshold-driven)
+    mm = R["monotone_methods"].pivot(index="variable", columns="method", values="violation_rate")
+    used = card["champion"]["params"]["monotone_constraints_method"]
+    if mm["advanced"].max() > 0 and mm[used].max() == 0:
+        bad = mm["advanced"][mm["advanced"] > 0].sort_values(ascending=False)
+        reg.add("Sensitivity", "High", "Monotone constraints not enforced with LightGBM's 'advanced' method",
+                f"Same hyperparameters: {', '.join(f'{v} {r:.1%}' for v, r in bad.items())} of sampled loans move against the declared "
+                f"direction with 'advanced'; '{used}' gives 0%. See LightGBM issue #5358.",
+                "0% violations on the test grid", f"Champion uses '{used}'.", ["monotone_methods"], status="Remediated")
+    iv = {r["name"]: r["iv"] for r in card["challenger"]["iv"]}
+    perm_rank = R["perm_importance_oot"].sort_values("auc_drop", ascending=False)["variable"].tolist().index("orig_rate") + 1
+    rate = train.groupby("vintage")["orig_rate"].mean()
     reg.add("Conceptual soundness", "Medium", "Original interest rate is confounded with calendar time",
-            "orig_rate has IV 0.41 in the scorecard and top-3 permutation importance; average rates move ~1pp across training vintages, so the "
-            "feature partly encodes vintage rather than borrower risk pricing.", "n/a",
-            "Replace with spread to the month's PMMS 30-year average (FRED MORTGAGE30US) at redevelopment; test in ablation.", ["perm_importance_oot", "model_card"])
-    reg.add("Data", "Medium", "Target definition depends on servicer-reported hardship flags",
-            "Primary target excludes 90+ DPD months in or within 3 months after a forbearance plan (Borrower Assistance Plan = F) or a "
-            "disaster-flagged month. Without the guard, 2018-2019 36-month default rates are 4.6-4.9% vs 0.7-1.0% with it; 70-77% of "
-            "unguarded events cure within a year, and 58% of the 2019 events remaining after the forbearance guard alone carried the disaster flag.", "n/a",
-            "Keep both definitions in monitoring; treat forbearance-heavy periods as a data-relevance trigger per SR 26-2 §V.", ["firstpass"])
+            f"orig_rate: scorecard IV {iv['orig_rate']:.2f}, #{perm_rank} in OOT permutation importance; mean rate by training vintage "
+            f"ranges {rate.min():.2f}-{rate.max():.2f}%.", "n/a",
+            "Replace with the spread to the month's PMMS 30-year rate (FRED MORTGAGE30US) at redevelopment.", ["perm_importance_oot"])
+    fp = {d["vintage"]: d for d in json.loads(Path("outputs/firstpass.json").read_text())}
+    guard = [(v, fp[v]["default_rate_36m"], fp[v]["default_rate_36m_unguarded"]) for v in sorted(fp)
+             if v >= 2017 and fp[v].get("default_rate_36m_unguarded") is not None]
+    if guard:
+        reg.add("Data", "Medium", "Target definition depends on servicer-reported hardship flags",
+                "36-month default rate with / without the forbearance and disaster guard: "
+                + ", ".join(f"{v} {g:.2%} / {u:.2%}" for v, g, u in guard) + ".", "n/a",
+                "Keep both definitions in monitoring; treat forbearance-heavy periods as a data-relevance trigger.", ["firstpass"])
+    train_v = sorted(train["vintage"].unique())
+    harp = [fp[v]["harp_loans"] / fp[v]["loans"] for v in train_v if v in fp]
     reg.add("Data", "Low", "Development sample excludes HARP loans and is the 50k-loan public sample",
-            f"HARP = 11-35% of 2009-2014 originations, defaults 2-4x non-HARP, DTI undisclosed. Train has {int(train['y'].sum()):,} defaults "
+            f"HARP is {min(harp):.0%}-{max(harp):.0%} of {train_v[0]}-{train_v[-1]} originations. Train has {int(train['y'].sum()):,} defaults "
             f"across {len(train):,} loans after exclusion.", "n/a",
-            "State scope in intended use; use Standard dataset for segment-level recalibration if the model is adopted.", ["feature_waterfall"])
+            "State scope in intended use; use the Standard dataset for segment-level recalibration if the model is adopted.", ["feature_waterfall"])
 
     # ------------------------------------------------------------------ save
     for k, v in R.items():

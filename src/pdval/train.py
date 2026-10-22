@@ -61,7 +61,7 @@ def fit_champion(train: pd.DataFrame, tune: pd.DataFrame, cols: list[str], cats:
     mono = [monotone.get(c, 0) for c in cols]
     base = {
         "objective": "binary", "metric": "auc", "verbosity": -1, "seed": seed, "bagging_freq": 1,
-        # "intermediate" (exact) — the "advanced" method violated the constraints in LightGBM 4.7 (validation finding F-mono)
+        # "advanced" breaks the constraints in LightGBM 4.7; see outputs/validation/monotone_methods.csv
         "monotone_constraints": mono, "monotone_constraints_method": "intermediate", "num_threads": 8,
         "cat_smooth": 20, "min_data_per_group": 200,
     }

@@ -124,18 +124,21 @@ def main(argv: list[str] | None = None) -> None:
     summaries = []
     for y in years:
         orig_p, perf_p = proc / f"orig_{y}.parquet", proc / f"perf_{y}.parquet"
+        kw = {"window": tcfg["window_months"], "dpd_threshold": tcfg["dpd_threshold"],
+              "credit_event_zb_codes": tcfg["credit_event_zb_codes"], "payoff_zb_codes": tcfg["payoff_zb_codes"],
+              "censor_zb_codes": tcfg["censor_zb_codes"], "defect_zb_codes": tcfg["defect_zb_codes"],
+              "performance_cutoff": cfg["data"]["performance_cutoff"], "con": con}
         target = build_target(
-            str(orig_p), str(perf_p), window=tcfg["window_months"], dpd_threshold=tcfg["dpd_threshold"],
-            credit_event_zb_codes=tcfg["credit_event_zb_codes"], payoff_zb_codes=tcfg["payoff_zb_codes"],
-            censor_zb_codes=tcfg["censor_zb_codes"], defect_zb_codes=tcfg["defect_zb_codes"],
-            performance_cutoff=cfg["data"]["performance_cutoff"],
+            str(orig_p), str(perf_p), **kw,
             exclude_forbearance_dpd=tcfg.get("exclude_forbearance_dpd", True),
             forbearance_lookback=tcfg.get("forbearance_lookback_months", 3),
-            exclude_disaster_dpd=tcfg.get("exclude_disaster_dpd", True), con=con,
+            exclude_disaster_dpd=tcfg.get("exclude_disaster_dpd", True),
         )
         target.to_parquet(proc / f"target_{y}.parquet", index=False)
+        unguarded = build_target(str(orig_p), str(perf_p), **kw, exclude_forbearance_dpd=False, exclude_disaster_dpd=False)
         orig = con.execute(f"SELECT * FROM '{orig_p.as_posix()}'").df()
         s = vintage_summary(y, orig, target)
+        s["default_rate_36m_unguarded"] = float(unguarded["y"].mean()) if unguarded["y"].notna().any() else None
         summaries.append(s)
         print(f"  {y}: observable {s['waterfall'][-2]['loans']:,} | defaults {s['defaults']:,} | "
               f"rate {s['default_rate_36m'] if s['default_rate_36m'] is None else f'{s['default_rate_36m']:.2%}'}")

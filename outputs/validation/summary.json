@@ -1,7 +1,7 @@
 {
   "findings": {
     "High": 1,
-    "Medium": 7,
+    "Medium": 10,
     "Low": 2
   },
   "champion_auc": {

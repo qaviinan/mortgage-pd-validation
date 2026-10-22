@@ -1,4 +1,4 @@
-"""Findings register: a validation result becomes a Finding when it breaches a pre-registered threshold."""
+"""Findings register: a validation result becomes a Finding when it breaches a configured threshold."""
 
 from __future__ import annotations
 
