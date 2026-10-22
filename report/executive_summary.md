@@ -1,7 +1,7 @@
 ---
-title: "Executive Summary: Independent Validation of a Mortgage PD Model"
+title: "Executive Summary: Validation of a Mortgage PD Model"
 author: "Qavi Inan"
-date: "September 13, 2026"
+date: "October 22, 2026"
 geometry: margin=0.65in
 fontsize: 9pt
 colorlinks: true
@@ -12,7 +12,7 @@ header-includes:
   - \setlength{\parskip}{3pt}
 ---
 
-**What was validated.** A 36-month probability-of-default model for conforming fixed-rate mortgages at origination: a LightGBM champion with monotone constraints, benchmarked against a weight-of-evidence scorecard and a FICO-only baseline, on Freddie Mac's public loan-level sample (fourteen vintages, 2006–2019, 700,000 loans). Validation follows SR 26-2 (April 2026): conceptual soundness, outcomes analysis, ongoing monitoring, with pre-registered thresholds.
+**What was validated.** A 36-month probability-of-default model for conforming fixed-rate mortgages at origination: a LightGBM champion with monotone constraints, benchmarked against a weight-of-evidence scorecard and a FICO-only baseline, on Freddie Mac's public loan-level sample (fourteen vintages, 2006–2019, 700,000 loans). Validation follows SR 26-2 (April 2026): conceptual soundness, outcomes analysis and ongoing monitoring, against thresholds set in `configs/default.yaml`.
 
 **Intended use.** Ranking new originations for screening and review; point-in-time PD within the post-2009 regime. Not for capital, pricing or stress without a macro overlay.
 
@@ -27,9 +27,9 @@ header-includes:
 
 ![](figures/fig1_timeline.png){width=50%}
 
-**Top findings** (1 High, 7 Medium, 2 Low):
+**Top findings** (1 High, 10 Medium, 2 Low):
 
-- **F07 (High, remediated).** Declared monotone constraints were not enforced by the original champion configuration. Champion re-fit with the exact 'intermediate' constraint method; post-fix grid test in this report.
+- **F10 (High, remediated).** Monotone constraints not enforced with LightGBM's 'advanced' method. Champion uses 'intermediate'.
 - **F01 (Medium).** Champion train-to-OOT AUC decay exceeds tolerance. Part in-sample optimism (train-tune gap), part regime drift (tune-OOT). Tighten regularisation; monitor AUC quarterly; re-estimate on rolling window.
 - **F02 (Medium).** Weak rank-ordering in segment fico_band=<660. Investigate segment-specific drivers; consider segment overlay.
 
