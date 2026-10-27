@@ -1,4 +1,4 @@
-# First pass — Freddie Mac sample vintages
+# First pass: Freddie Mac sample vintages
 
 Window 36m, 90+ DPD (excluding months in forbearance plan) or credit-event termination. Performance cutoff 202603.
 
