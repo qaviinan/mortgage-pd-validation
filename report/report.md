@@ -2,7 +2,7 @@
 title: "Validation of a Mortgage Probability-of-Default Model"
 subtitle: "Champion (gradient-boosted trees) vs challenger (WoE scorecard), Freddie Mac single-family loan-level data"
 author: "Qavi Inan"
-date: "October 22, 2026"
+date: "October 27, 2026"
 geometry: margin=0.9in
 fontsize: 10pt
 colorlinks: true
@@ -52,7 +52,7 @@ The discrimination and calibration tests follow the Basel Committee's *Studies o
 
 **Source and lineage.** Freddie Mac Single-Family Loan-Level Dataset, Sample files, Release 47 (July 2026), downloaded from Clarity Data Intelligence on 2026-09-12. The SHA-256 of each vintage zip is recorded in `data/manifest.json`. Before any column is named, the file layout is checked against Freddie's July 2026 layout spreadsheet (31 origination fields, 35 performance fields). Fourteen vintages were ingested, 700,000 loans and 44,653,660 loan-months, with no orphan records between the origination and performance files. Performance runs through 202603.
 
-**Target definition.** `default_36m = 1` if within months 1–36 after first payment the loan is ever 90+ days delinquent (Freddie delinquency status $\geq$ 03, or RA), or terminates through a third-party sale, short sale/charge-off or REO disposition (zero-balance codes 02/03/09). Loan age is computed from First Payment Date, not Freddie's Loan Age field, which resets on modification. A 90+ month does not count if the loan is in, or within 3 months after, a servicer-reported forbearance plan (Borrower Assistance Plan = F) or a disaster-related delinquency flag. Credit-event terminations always count. Loans are observable if they reach month 36 or pay off voluntarily before it; defects (ZB 96) and loans sold before month 36 without a default are excluded. The pure ever-90+ definition and the forbearance-only guard are kept as sensitivities.
+**Target definition.** `default_36m = 1` if within months 1–36 after first payment the loan is ever 90+ days delinquent (Freddie delinquency status $\geq$ 03, or RA), or terminates through a third-party sale, short sale/charge-off or REO disposition (zero-balance codes 02/03/09). Loan age is computed from First Payment Date, not Freddie's Loan Age field, which resets on modification. A 90+ month does not count if the loan is in, or within 3 months after, a servicer-reported forbearance plan (Borrower Assistance Plan = F) or a disaster-related delinquency flag. Credit-event terminations always count. Loans are observable if they reach month 36 or pay off voluntarily before it; defects (ZB 96) are excluded. Loans sold before month 36 without a default (whole-loan sale, ZB 15, or reperforming securitisation, ZB 16) are censored; that removes 19 loans across all vintages. The pure ever-90+ definition and the forbearance-only guard are kept as sensitivities.
 
 Without the guard, 36-month default rates for the 2017, 2018, 2019 vintages are 3.31%, 4.61%, 4.88%; with it they are 0.91%, 0.70%, 0.48%, and the out-of-time vintages sit close to 2016's 0.65%. This is a data-relevance issue in SR 26-2's sense and is carried as a Medium finding. The target definition and the train/tune split were revised after the out-of-time default rates were first examined.
 

@@ -168,7 +168,7 @@ def main(argv: list[str] | None = None) -> None:
     R["monotonicity"] = pd.DataFrame([sens.monotonicity_check(predict_champ, X_oot, c, d, grids[c], seed=seed) for c, d in mono.items() if c in grids])
     # same hyperparameters under each LightGBM constraint method
     card = json.loads(Path("outputs/model_card.json").read_text())
-    dtrain = lgb_dataset(train, train["y"].to_numpy(), cols, cat)
+    dtrain = lgb_dataset(train, train["y"].to_numpy(), cols, cat, max_bin=card["champion"]["params"].get("max_bin", 255))
     mrows = []
     for method in ("basic", "intermediate", "advanced"):
         b = lgb.train({**card["champion"]["params"], "monotone_constraints_method": method}, dtrain,

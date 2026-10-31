@@ -32,9 +32,10 @@ from sklearn.metrics import log_loss, roc_auc_score
 from pdval.models.classic import FicoBaseline, WoeScorecard
 
 
-def lgb_dataset(df: pd.DataFrame, y: np.ndarray | None, cols: list[str], cats: list[str], reference=None):
-    x = df[cols]
-    return lgb.Dataset(x, label=y, categorical_feature=cats, free_raw_data=False, reference=reference)
+def lgb_dataset(df: pd.DataFrame, y: np.ndarray | None, cols: list[str], cats: list[str], reference=None, max_bin: int = 255):
+    # max_bin is fixed when the Dataset is built, and feature_pre_filter would pin min_child_samples to the first config
+    return lgb.Dataset(df[cols], label=y, categorical_feature=cats, free_raw_data=False, reference=reference,
+                       params={"max_bin": max_bin, "feature_pre_filter": False})
 
 
 def search_space(rng: np.random.Generator, n: int) -> list[dict]:
@@ -55,8 +56,7 @@ def search_space(rng: np.random.Generator, n: int) -> list[dict]:
 def fit_champion(train: pd.DataFrame, tune: pd.DataFrame, cols: list[str], cats: list[str],
                  monotone: dict[str, int], seed: int, n_configs: int = 24) -> tuple[lgb.Booster, dict, list[dict]]:
     rng = np.random.default_rng(seed)
-    dtrain = lgb_dataset(train, train["y"].to_numpy(), cols, cats)
-    dtune = lgb_dataset(tune, tune["y"].to_numpy(), cols, cats, reference=dtrain)
+    datasets: dict[int, tuple[lgb.Dataset, lgb.Dataset]] = {}
     mono = [monotone.get(c, 0) for c in cols]
     base = {
         "objective": "binary", "metric": "auc", "verbosity": -1, "seed": seed, "bagging_freq": 1,
@@ -67,6 +67,10 @@ def fit_champion(train: pd.DataFrame, tune: pd.DataFrame, cols: list[str], cats:
     history, best = [], None
     for i, hp in enumerate(search_space(rng, n_configs)):
         params = {**base, **hp}
+        if hp["max_bin"] not in datasets:
+            dtr = lgb_dataset(train, train["y"].to_numpy(), cols, cats, max_bin=hp["max_bin"])
+            datasets[hp["max_bin"]] = (dtr, lgb_dataset(tune, tune["y"].to_numpy(), cols, cats, reference=dtr, max_bin=hp["max_bin"]))
+        dtrain, dtune = datasets[hp["max_bin"]]
         evals: dict = {}
         booster = lgb.train(params, dtrain, num_boost_round=3000, valid_sets=[dtune], valid_names=["tune"],
                             callbacks=[lgb.early_stopping(100, verbose=False), lgb.record_evaluation(evals)])
@@ -76,7 +80,7 @@ def fit_champion(train: pd.DataFrame, tune: pd.DataFrame, cols: list[str], cats:
         if best is None or auc > best[1]:
             best = (booster, auc, params, booster.best_iteration)
         print(f"  cfg {i:2d}: leaves={hp['num_leaves']:>2} mcs={hp['min_child_samples']:>4} lr={hp['learning_rate']} "
-              f"ff={hp['feature_fraction']} l2={hp['lambda_l2']:>4} -> iters={booster.best_iteration:>4} tune AUC={auc:.4f}")
+              f"ff={hp['feature_fraction']} l2={hp['lambda_l2']:>4} bins={hp['max_bin']:>3} -> iters={booster.best_iteration:>4} tune AUC={auc:.4f}")
     booster, auc, params, iters = best
     return booster, {"params": params, "best_iteration": iters, "tune_auc": auc}, history
 
